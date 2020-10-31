@@ -31,21 +31,20 @@ class _MyHomePageState extends State<MyHomePage> {
   double _sampleSize = 500;
   StreamController<List<int>> _streamController;
   Stream<List<int>> _stream;
-  int val = 5000;
+  int val = 2500;
   String currentPage = "Bubble Sort";
   bool isVisualizing = false;
+  TextEditingController _controller = TextEditingController();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _sampleSize = MediaQuery.of(context).size.width / 2;
     _streamController = StreamController<List<int>>();
     _stream = _streamController.stream;
     _randomise();
   }
 
   _randomise() {
-    _sampleSize = MediaQuery.of(context).size.width / 2;
     _numbers = [];
     for (int i = 0; i < _sampleSize; ++i) {
       _numbers.add(Random().nextInt(500));
@@ -147,31 +146,62 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       ),
-      bottomNavigationBar: Row(
+      bottomNavigationBar: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Expanded(
-            child: FlatButton(
-              child: Text(
-                "Generate Random",
+          Row(
+            children: [
+              Expanded(
+                child: FlatButton(
+                  child: Text(
+                    "Generate Random",
+                  ),
+                  onPressed: _randomise,
+                ),
               ),
-              onPressed: _randomise,
-            ),
+              Expanded(
+                child: FlatButton(
+                  child: Text(
+                    "Visualise",
+                  ),
+                  onPressed: isVisualizing == false
+                      ? () {
+                          generateAlgoAccordingToPage(currentPage, _numbers,
+                              _streamController, val, _sampleSize);
+                          setState(() {
+                            isVisualizing = !isVisualizing;
+                          });
+                        }
+                      : null,
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: FlatButton(
-              child: Text(
-                "Visualise",
+          Slider(
+            value: val.toDouble(),
+            max: 5000,
+            min: 500,
+            onChanged: (newVal) {
+              setState(() {
+                val = newVal.floor();
+              });
+            },
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width / 2,
+            child: TextFormField(
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Array Length',
               ),
-              onPressed: isVisualizing == false
-                  ? () {
-                      generateAlgoAccordingToPage(currentPage, _numbers,
-                          _streamController, val, _sampleSize);
-                      setState(() {
-                        isVisualizing = !isVisualizing;
-                      });
-                    }
-                  : null,
+              onFieldSubmitted: (newLen) {
+                setState(() {
+                  _sampleSize = double.parse(newLen);
+                });
+              },
             ),
+            alignment: Alignment.center,
           ),
         ],
       ),
