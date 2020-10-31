@@ -166,3 +166,36 @@ selectionSort(_numbers, _streamController, val) async {
     }
   }
 }
+
+// HEAP SORT
+heapSort(_numbers, _streamController, val) async {
+    for (int i = _numbers.length ~/ 2; i >= 0; i--) {
+      await heapify(_numbers, _numbers.length, i, val);
+      _streamController.add(_numbers);
+    }
+    for (int i = _numbers.length - 1; i >= 0; i--) {
+      int temp = _numbers[0];
+      _numbers[0] = _numbers[i];
+      _numbers[i] = temp;
+      await heapify(_numbers, i, 0, val);
+      _streamController.add(_numbers);
+    }
+  }
+
+  heapify(List<int> arr, int n, int i, val) async {
+    int largest = i;
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
+
+    if (l < n && arr[l] > arr[largest]) largest = l;
+
+    if (r < n && arr[r] > arr[largest]) largest = r;
+
+    if (largest != i) {
+      int temp = arr[i];
+      arr[i] = arr[largest];
+      arr[largest] = temp;
+      heapify(arr, n, largest, val);
+    }
+    await Future.delayed(Duration(microseconds: val), () {});
+  }

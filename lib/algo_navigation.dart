@@ -12,5 +12,7 @@ generateAlgoAccordingToPage(
     mergeSort(0, _sampleSize.toInt() - 1, _numbers, _streamController, val);
   } else if (currentPage == "Selection Sort") {
     selectionSort(_numbers, _streamController, val);
+  } else if (currentPage == "Heap Sort") {
+    heapSort(_numbers, _streamController, val);
   }
 }
