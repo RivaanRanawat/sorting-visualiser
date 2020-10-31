@@ -10,5 +10,7 @@ generateAlgoAccordingToPage(
     insertionSort(_numbers, _streamController, val);
   } else if (currentPage == "Merge Sort") {
     mergeSort(0, _sampleSize.toInt() - 1, _numbers, _streamController, val);
+  } else if (currentPage == "Selection Sort") {
+    selectionSort(_numbers, _streamController, val);
   }
 }

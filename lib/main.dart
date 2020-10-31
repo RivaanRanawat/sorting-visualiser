@@ -33,6 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Stream<List<int>> _stream;
   int val = 5000;
   String currentPage = "Bubble Sort";
+  bool isVisualizing = false;
 
   @override
   void didChangeDependencies() {
@@ -49,6 +50,9 @@ class _MyHomePageState extends State<MyHomePage> {
     for (int i = 0; i < _sampleSize; ++i) {
       _numbers.add(Random().nextInt(500));
     }
+    setState(() {
+      isVisualizing = false;
+    });
     _streamController.add(_numbers);
   }
 
@@ -56,31 +60,43 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (value) {
       case 'Bubble Sort':
         setState(() {
+          _randomise();
+          isVisualizing = false;
           currentPage = "Bubble Sort";
         });
         break;
       case 'Quick Sort':
         setState(() {
+          _randomise();
+          isVisualizing = false;
           currentPage = "Quick Sort";
         });
         break;
       case 'Insertion Sort':
         setState(() {
+          _randomise();
+          isVisualizing = false;
           currentPage = "Insertion Sort";
         });
         break;
       case 'Merge Sort':
         setState(() {
+          _randomise();
+          isVisualizing = false;
           currentPage = "Merge Sort";
         });
         break;
       case 'Selection Sort':
         setState(() {
+          _randomise();
+          isVisualizing = false;
           currentPage = "Selection Sort";
         });
         break;
       case 'Heap Sort':
         setState(() {
+          _randomise();
+          isVisualizing = false;
           currentPage = "Heap Sort";
         });
         break;
@@ -113,27 +129,23 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          StreamBuilder<Object>(
-            stream: _stream,
-            builder: (context, snapshot) {
-              int counter = 0;
-              return Row(
-                children: _numbers.map((int number) {
-                  counter++;
-                  return CustomPaint(
-                    painter: BarPainter(
-                      width: 2.0,
-                      value: number,
-                      index: counter,
-                    ),
-                  );
-                }).toList(),
+      body: StreamBuilder<Object>(
+        stream: _stream,
+        builder: (context, snapshot) {
+          int counter = 0;
+          return Row(
+            children: _numbers.map((int number) {
+              counter++;
+              return CustomPaint(
+                painter: BarPainter(
+                  width: 2.0,
+                  value: number,
+                  index: counter,
+                ),
               );
-            },
-          ),
-        ],
+            }).toList(),
+          );
+        },
       ),
       bottomNavigationBar: Row(
         children: [
@@ -150,15 +162,18 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text(
                 "Visualise",
               ),
-              onPressed: () => generateAlgoAccordingToPage(
-                  currentPage, _numbers, _streamController, val, _sampleSize),
+              onPressed: isVisualizing == false
+                  ? () {
+                      generateAlgoAccordingToPage(currentPage, _numbers,
+                          _streamController, val, _sampleSize);
+                      setState(() {
+                        isVisualizing = !isVisualizing;
+                      });
+                    }
+                  : null,
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.arrow_forward),
       ),
     );
   }

@@ -150,3 +150,19 @@ mergeSort(
     await merge(leftIndex, middleIndex, rightIndex);
   }
 }
+
+// SELECTION SORT
+selectionSort(_numbers, _streamController, val) async {
+  for (int i = 0; i < _numbers.length; i++) {
+    for (int j = i + 1; j < _numbers.length; j++) {
+      if (_numbers[i] > _numbers[j]) {
+        int temp = _numbers[j];
+        _numbers[j] = _numbers[i];
+        _numbers[i] = temp;
+      }
+
+      await Future.delayed(Duration(microseconds: 1000), () {});
+      _streamController.add(_numbers);
+    }
+  }
+}
